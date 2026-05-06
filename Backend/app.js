@@ -14,9 +14,31 @@ connectDB();
 const startAppointmentCron = require('./src/cron/appointmentCron');
 startAppointmentCron();
 
+// app.use(
+//   cors({
+//     origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"],
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:3001",
+  "https://your-website.vercel.app",
+  "https://your-admin.vercel.app",
+  "https://your-vendor.vercel.app"
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
