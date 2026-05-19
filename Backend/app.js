@@ -16,7 +16,8 @@ startAppointmentCron();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:3001", 
+      "https://meditoken-website-1dr6lzwai-ananyak4433-debugs-projects.vercel.app"],
     credentials: true,
   })
 );
