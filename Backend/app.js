@@ -38,7 +38,9 @@ app.use(
       "http://localhost:5173",
 
       // frontend deployed URLs
-      "https://meditoken-website-1dr6lzwai-ananyak4433-debugs-projects.vercel.app",
+      "https://meditoken-website.vercel.app/",
+      "https://meditoken-website-1dr6lzwai-ananyak4433-debugs-projects.vercel.app"
+      
     ],
     credentials: true,
   })
