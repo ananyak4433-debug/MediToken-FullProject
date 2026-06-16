@@ -14,21 +14,27 @@ connectDB();
 const startAppointmentCron = require('./src/cron/appointmentCron');
 startAppointmentCron();
 
-// app.use(
-//   cors({
-//     origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"],
-//     credentials: true,
-//   })
-// );
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://localhost:5173",
   "http://localhost:3001",
-  "https://your-website.vercel.app",
-  "https://your-admin.vercel.app",
-  "https://your-vendor.vercel.app"
+  "http://localhost:5173",
+  "https://medi-token-admin.vercel.app",
+  "https://meditoken-website.vercel.app"
 ];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true
+  })
+);
 
 app.use(
   cors({
@@ -39,7 +45,8 @@ app.use(
 
       // frontend deployed URLs
       "https://meditoken-website.vercel.app",
-      "https://meditoken-website-1dr6lzwai-ananyak4433-debugs-projects.vercel.app"
+      "https://medi-token-admin.vercel.app",
+      "https://medi-token-vendor.vercel.app"
       
     ],
     credentials: true,
