@@ -7,9 +7,14 @@ import {
   getPatientsFailure
 } from './slice';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 // 🔗 API
+// const fetchPatientsApi = () =>
+//   axios.get('http://localhost:7000/api/patients/getAll');
+
 const fetchPatientsApi = () =>
-  axios.get('http://localhost:7000/api/patients/getAll');
+  axios.get(`${API_URL}/patients/getAll`);
 
 // 🧠 Worker Saga
 function* fetchPatients() {
