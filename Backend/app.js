@@ -25,33 +25,33 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin(origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+        return callback(null, true);
       }
+      console.log("Blocked Origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true
-  })
-);
-
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "http://localhost:5173",
-
-      // frontend deployed URLs
-      "https://meditoken-website.vercel.app",
-      "https://medi-token-admin.vercel.app",
-      "https://medi-token-vendor.vercel.app"
-      
-    ],
     credentials: true,
   })
 );
+
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3000",
+//       "http://localhost:3001",
+//       "http://localhost:5173",
+
+//       // frontend deployed URLs
+//       "https://meditoken-website.vercel.app",
+//       "https://medi-token-admin.vercel.app",
+//       "https://medi-token-vendor.vercel.app"
+      
+//     ],
+//     credentials: true,
+//   })
+// );
 
 app.use(express.json());
 app.use(cookieParser());
