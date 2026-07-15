@@ -1,6 +1,10 @@
 
 // const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:7000/api';
-export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:7000/api";
+// export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:7000/api";
+export const BASE_URL =
+  import.meta.env.VITE_API_URL || "https://meditoken-fullproject.onrender.com/api";
+
+
 
 // ✅ FIXED: same key as AuthContext
 // const getToken = () => localStorage.getItem('token');
