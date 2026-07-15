@@ -1,323 +1,42 @@
-// import React, { useEffect, useState } from 'react';
-// import {
-//   Grid,
-//   Card,
-//   CardContent,
-//   Typography,
-//   Box,
-//   TextField,
-//   Avatar
-// } from '@mui/material';
-
-// import { SearchOutlined } from '@ant-design/icons';
-// import axios from 'axios';
-
-// const PatientsCard = () => {
-//   const [patients, setPatients] = useState([]);
-//   const [search, setSearch] = useState('');
-
-//   // ✅ FETCH PATIENTS (SAFE)
-//   const fetchPatients = async () => {
-//     try {
-//       const res = await axios.get('http://localhost:5000/api/patients');
-
-//       console.log("API RESPONSE:", res.data); // 🔍 debug once
-
-//       // ✅ handle all possible formats
-//       if (Array.isArray(res.data)) {
-//         setPatients(res.data);
-//       } else if (Array.isArray(res.data.patients)) {
-//         setPatients(res.data.patients);
-//       } else if (Array.isArray(res.data.data)) {
-//         setPatients(res.data.data);
-//       } else {
-//         setPatients([]);
-//       }
-
-//     } catch (err) {
-//       console.error(err);
-//       setPatients([]); // fallback
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchPatients();
-//   }, []);
-
-//   // ✅ SAFE FILTER (NO CRASH)
-//   const filteredPatients = Array.isArray(patients)
-//     ? patients.filter((p) =>
-//         p?.name?.toLowerCase().includes(search.toLowerCase())
-//       )
-//     : [];
-
-//   return (
-//     <Grid container spacing={3}>
-
-//       {/* SEARCH */}
-//       <Grid item xs={12}>
-//         <Card sx={{ borderRadius: 3, boxShadow: 2 }}>
-//           <CardContent>
-//             <Box display="flex" alignItems="center" gap={1}>
-//               <SearchOutlined />
-//               <TextField
-//                 placeholder="Search patients..."
-//                 fullWidth
-//                 size="small"
-//                 value={search}
-//                 onChange={(e) => setSearch(e.target.value)}
-//               />
-//             </Box>
-//           </CardContent>
-//         </Card>
-//       </Grid>
-
-//       {/* TABLE */}
-//       <Grid item xs={12}>
-//         <Card sx={{ borderRadius: 3, boxShadow: 2 }}>
-//           <CardContent>
-
-//             {/* HEADER */}
-//             <Grid container mb={2} sx={{ fontWeight: 'bold', color: 'gray' }}>
-//               <Grid item xs={4}>Patient</Grid>
-//               <Grid item xs={3}>Contact</Grid>
-//               <Grid item xs={2}>Age</Grid>
-//               <Grid item xs={2}>Gender</Grid>
-//               <Grid item xs={1}>Token</Grid>
-//             </Grid>
-
-//             {/* EMPTY STATE */}
-//             {filteredPatients.length === 0 && (
-//               <Typography align="center" color="text.secondary" mt={3}>
-//                 No patients found
-//               </Typography>
-//             )}
-
-//             {/* DATA */}
-//             {filteredPatients.map((p) => (
-//               <Grid
-//                 container
-//                 key={p._id}
-//                 alignItems="center"
-//                 sx={{
-//                   py: 2,
-//                   borderTop: '1px solid #eee',
-//                   '&:hover': { backgroundColor: '#fafafa' }
-//                 }}
-//               >
-//                 <Grid item xs={4} display="flex" alignItems="center" gap={2}>
-//                   <Avatar>{p?.name?.charAt(0)}</Avatar>
-//                   <Box>
-//                     <Typography fontWeight="bold">{p?.name || 'N/A'}</Typography>
-//                     <Typography variant="body2" color="text.secondary">
-//                       ID: {p?._id || '-'}
-//                     </Typography>
-//                   </Box>
-//                 </Grid>
-
-//                 <Grid item xs={3}>
-//                   <Typography color="primary">{p?.email || '-'}</Typography>
-//                   <Typography variant="body2" color="text.secondary">
-//                     {p?.phone || '-'}
-//                   </Typography>
-//                 </Grid>
-
-//                 <Grid item xs={2}>
-//                   <Typography>{p?.age || '-'}</Typography>
-//                 </Grid>
-
-//                 <Grid item xs={2}>
-//                   <Typography>{p?.gender || '-'}</Typography>
-//                 </Grid>
-
-//                 <Grid item xs={1}>
-//                   <Typography fontWeight="bold">
-//                     {p?.tokenNumber || '-'}
-//                   </Typography>
-//                 </Grid>
-//               </Grid>
-//             ))}
-
-//           </CardContent>
-//         </Card>
-//       </Grid>
-//     </Grid>
-//   );
-// };
-
-// export default PatientsCard;
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import {
-//   Grid,
-//   Card,
-//   CardContent,
-//   Typography,
-//   Box,
-//   TextField,
-//   Avatar
-// } from '@mui/material';
-
-// import { SearchOutlined } from '@ant-design/icons';
-// import { useDispatch, useSelector } from 'react-redux';
-
-// import { getPatientsRequest } from 'container/PatientContainer/slice';
-
-// const PatientsCard = () => {
-//   const dispatch = useDispatch();
-
-//   const { patients, loading } = useSelector(
-//     (state) => state.patients
-//   );
-
-//   const [search, setSearch] = useState('');
-
-//   // 🔥 FETCH FROM SAGA
-//   useEffect(() => {
-//     dispatch(getPatientsRequest());
-//   }, [dispatch]);
-
-//   const fullState = useSelector((state) => state);
-// console.log("REDUX STATE:", fullState);
-
-//   // ✅ FILTER
-//   const filteredPatients = patients?.filter((p) =>
-//     p?.name?.toLowerCase().includes(search.toLowerCase())
-//   );
-
-//   return (
-//     <Grid container spacing={3}>
-
-//       {/* SEARCH */}
-//       <Grid item xs={12}>
-//         <Card sx={{ borderRadius: 3, boxShadow: 2 }}>
-//           <CardContent>
-//             <Box display="flex" alignItems="center" gap={1}>
-//               <SearchOutlined />
-//               <TextField
-//                 placeholder="Search patients..."
-//                 fullWidth
-//                 size="small"
-//                 value={search}
-//                 onChange={(e) => setSearch(e.target.value)}
-//               />
-//             </Box>
-//           </CardContent>
-//         </Card>
-//       </Grid>
-
-//       {/* TABLE */}
-//       <Grid item xs={12}>
-//         <Card sx={{ borderRadius: 3, boxShadow: 2 }}>
-//           <CardContent>
-
-//             {loading && (
-//               <Typography align="center">Loading...</Typography>
-//             )}
-
-//             {!loading && filteredPatients?.length === 0 && (
-//               <Typography align="center" color="text.secondary" mt={3}>
-//                 No patients found
-//               </Typography>
-//             )}
-
-//             {!loading && filteredPatients?.map((p) => (
-//               <Grid
-//                 container
-//                 key={p._id}
-//                 alignItems="center"
-//                 sx={{
-//                   py: 2,
-//                   borderTop: '1px solid #eee',
-//                   '&:hover': { backgroundColor: '#fafafa' }
-//                 }}
-//               >
-//                 <Grid item xs={4} display="flex" alignItems="center" gap={2}>
-//                   <Avatar>{p?.name?.charAt(0)}</Avatar>
-//                   <Box>
-//                     <Typography fontWeight="bold">{p?.name || 'N/A'}</Typography>
-//                     <Typography variant="body2" color="text.secondary">
-//                       ID: {p?._id || '-'}
-//                     </Typography>
-//                   </Box>
-//                 </Grid>
-
-//                 <Grid item xs={3}>
-//                   <Typography color="primary">{p?.email || '-'}</Typography>
-//                   <Typography variant="body2" color="text.secondary">
-//                     {p?.phone || '-'}
-//                   </Typography>
-//                 </Grid>
-
-//                 <Grid item xs={2}>
-//                   <Typography>{p?.age || '-'}</Typography>
-//                 </Grid>
-
-//                 <Grid item xs={2}>
-//                   <Typography>{p?.gender || '-'}</Typography>
-//                 </Grid>
-
-//                 <Grid item xs={1}>
-//                   <Typography fontWeight="bold">
-//                     {p?.tokenNumber || '-'}
-//                   </Typography>
-//                 </Grid>
-//               </Grid>
-//             ))}
-
-//           </CardContent>
-//         </Card>
-//       </Grid>
-//     </Grid>
-//   );
-// };
-
-// export default PatientsCard;
-
-
-
-
-
-
-
-
-
 
 import React, { useEffect, useState } from 'react';
 import {
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  TextField,
-  Avatar
+  Grid, Card, CardContent, Typography, Box,
+  TextField, Avatar, Pagination
 } from '@mui/material';
 
 import { SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { getPatientsRequest } from 'container/PatientContainer/slice';
+
+const ROWS_PER_PAGE = 10;
 
 const PatientsCard = () => {
   const dispatch = useDispatch();
-
   const { patients, loading } = useSelector((state) => state.patients);
 
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     dispatch(getPatientsRequest());
   }, [dispatch]);
 
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
   const filteredPatients = patients
-  ?.slice()
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
-  .filter((p) => p?.name?.toLowerCase().includes(search.toLowerCase()));
+    ?.slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .filter((p) => p?.name?.toLowerCase().includes(search.toLowerCase()));
+
+  const totalPages = Math.ceil((filteredPatients?.length || 0) / ROWS_PER_PAGE);
+  const paginatedPatients = filteredPatients?.slice(
+    (page - 1) * ROWS_PER_PAGE,
+    page * ROWS_PER_PAGE
+  );
 
   return (
     <Grid container spacing={3}>
@@ -357,54 +76,31 @@ const PatientsCard = () => {
 
             {/* COLUMN HEADERS */}
             {!loading && filteredPatients?.length > 0 && (
-              <Grid
-                container
-                alignItems="center"
-                sx={{
-                  py: 1,
-                  borderBottom: '2px solid #e0e0e0',
-                  mb: 1
-                }}
-              >
+              <Grid container alignItems="center"
+                sx={{ py: 1, borderBottom: '2px solid #e0e0e0', mb: 1 }}>
                 <Grid item xs={4}>
-                  <Typography variant="body2" fontWeight="bold" color="text.secondary">
-                    Patient
-                  </Typography>
+                  <Typography variant="body2" fontWeight="bold" color="text.secondary">Patient</Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2" fontWeight="bold" color="text.secondary">
-                    Contact
-                  </Typography>
+                  <Typography variant="body2" fontWeight="bold" color="text.secondary">Contact</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography variant="body2" fontWeight="bold" color="text.secondary">
-                    Age
-                  </Typography>
+                  <Typography variant="body2" fontWeight="bold" color="text.secondary">Age</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography variant="body2" fontWeight="bold" color="text.secondary">
-                    Gender
-                  </Typography>
+                  <Typography variant="body2" fontWeight="bold" color="text.secondary">Gender</Typography>
                 </Grid>
                 <Grid item xs={1}>
-                  <Typography variant="body2" fontWeight="bold" color="text.secondary">
-                    Token
-                  </Typography>
+                  <Typography variant="body2" fontWeight="bold" color="text.secondary">Token</Typography>
                 </Grid>
               </Grid>
             )}
 
             {/* PATIENT ROWS */}
-            {!loading && filteredPatients?.map((p) => (
+            {!loading && paginatedPatients?.map((p) => (
               <Grid
-                container
-                key={p._id}
-                alignItems="center"
-                sx={{
-                  py: 2,
-                  borderTop: '1px solid #eee',
-                  '&:hover': { backgroundColor: '#fafafa' }
-                }}
+                container key={p._id} alignItems="center"
+                sx={{ py: 2, borderTop: '1px solid #eee', '&:hover': { backgroundColor: '#fafafa' } }}
               >
                 <Grid item xs={4} display="flex" alignItems="center" gap={2}>
                   <Avatar>{p?.name?.charAt(0)}</Avatar>
@@ -418,9 +114,7 @@ const PatientsCard = () => {
 
                 <Grid item xs={3}>
                   <Typography color="primary">{p?.email || '-'}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {p?.phone || '-'}
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary">{p?.phone || '-'}</Typography>
                 </Grid>
 
                 <Grid item xs={2}>
@@ -432,12 +126,32 @@ const PatientsCard = () => {
                 </Grid>
 
                 <Grid item xs={1}>
-                  <Typography fontWeight="bold">
-                    {p?.tokenNumber || '-'}
-                  </Typography>
+                  <Typography fontWeight="bold">{p?.tokenNumber || '-'}</Typography>
                 </Grid>
               </Grid>
             ))}
+
+            {/* PAGINATION */}
+            {!loading && totalPages > 1 && (
+              <Box display="flex" justifyContent="space-between" alignItems="center" mt={3}>
+                <Typography variant="body2" color="text.secondary">
+                  Showing {(page - 1) * ROWS_PER_PAGE + 1}–{Math.min(page * ROWS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} patients
+                </Typography>
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={(_, val) => setPage(val)}
+                  shape="rounded"
+                  sx={{
+                    '& .MuiPaginationItem-root': { color: '#38c1b3' },
+                    '& .Mui-selected': {
+                      backgroundColor: '#38c1b3 !important',
+                      color: '#fff'
+                    }
+                  }}
+                />
+              </Box>
+            )}
 
           </CardContent>
         </Card>

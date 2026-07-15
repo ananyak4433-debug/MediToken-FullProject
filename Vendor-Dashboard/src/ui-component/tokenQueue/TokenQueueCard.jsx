@@ -17,32 +17,32 @@ export default function TokenQueueCard() {
   useEffect(() => { dispatch(getAppointments()); }, [dispatch]);
 
   // In TokenQueueCard.jsx
-useEffect(() => { 
-  dispatch(getAppointments());
-  
-  // ✅ auto-refresh every 60 seconds
-  const interval = setInterval(() => {
+  useEffect(() => {
     dispatch(getAppointments());
-  }, 60000);
 
-  return () => clearInterval(interval); // cleanup
-}, [dispatch]);
+    // ✅ auto-refresh every 60 seconds
+    const interval = setInterval(() => {
+      dispatch(getAppointments());
+    }, 60000);
+
+    return () => clearInterval(interval); // cleanup
+  }, [dispatch]);
 
   // ================= FILTER =================
   const filteredRows = appointmentsList
-  .filter(row =>
-    `${row.patientName} ${row.tokenNumber}`
-      .toLowerCase().includes(search.toLowerCase())
-  )
-  .filter(row => {
-    if (filter === "All") return true;
-    if (filter === "Waiting") return row.status === "booked";
-    if (filter === "Serving") return row.status === "serving";
-    if (filter === "Done") return row.status === "completed";
-    return true;
-  })
-  .sort((a, b) => b.tokenNumber - a.tokenNumber); 
-  
+    .filter(row =>
+      `${row.patientName} ${row.tokenNumber}`
+        .toLowerCase().includes(search.toLowerCase())
+    )
+    .filter(row => {
+      if (filter === "All") return true;
+      if (filter === "Waiting") return row.status === "booked";
+      if (filter === "Serving") return row.status === "serving";
+      if (filter === "Done") return row.status === "completed";
+      return true;
+    })
+    .sort((a, b) => b.tokenNumber - a.tokenNumber);
+
   // ================= STATS =================
   const stats = {
     total: appointmentsList.length,
@@ -51,11 +51,19 @@ useEffect(() => {
     done: appointmentsList.filter(r => r.status === "completed").length
   };
 
+  // const statusColor = (status) => {
+  //   if (status === "booked") return "warning";
+  //   if (status === "serving") return "success";
+  //   if (status === "completed") return "primary";
+  //   return "default";
+  // };
+
   const statusColor = (status) => {
-    if (status === "booked") return "warning";
-    if (status === "serving") return "success";
-    if (status === "completed") return "primary";
-    return "default";
+    if (status === "booked") return { backgroundColor: '#FFF4DE', color: '#EF9F27' };  // amber
+    if (status === "serving") return { backgroundColor: '#EAF4FF', color: '#2196F3' };  // blue
+    if (status === "completed") return { backgroundColor: '#E8F5EE', color: '#1D9E75' };  // green
+    // if (status === "cancelled")  return { backgroundColor: '#fdecea', color: '#ef4444' };  // red
+    return { backgroundColor: '#f0f0f0', color: '#888' };
   };
 
   const statusLabel = (status) => {
@@ -71,9 +79,9 @@ useEffect(() => {
       <Grid container spacing={2} mb={3}>
         {[
           { label: "Total Today", value: stats.total },
-          { label: "Waiting",     value: stats.waiting },
+          { label: "Waiting", value: stats.waiting },
           { label: "Now Serving", value: stats.serving },
-          { label: "Completed",   value: stats.done }
+          { label: "Completed", value: stats.done }
         ].map(s => (
           <Grid item xs={3} key={s.label}>
             <Card sx={{ p: 2 }}>
@@ -132,22 +140,22 @@ useEffect(() => {
             </Typography>
           )}
 
-          {!loading && filteredRows.map(row =>(
-            
+          {!loading && filteredRows.map(row => (
+
             <Grid container key={row._id} alignItems="center"
               sx={{ py: 1.5, borderTop: "1px solid #eee" }}>
-                
+
               <Grid item xs={2}>
-                
-                
+
+
                 <Typography fontWeight="bold"> #{row.tokenNumber}
-    
-      
+
+
                 </Typography>
-               
-                
+
+
               </Grid>
-              
+
 
               <Grid item xs={3} display="flex" alignItems="center" gap={1}>
                 <Avatar>{row.patientName?.charAt(0)?.toUpperCase()}</Avatar>
@@ -174,11 +182,22 @@ useEffect(() => {
               </Grid>
 
               <Grid item xs={2}>
-                <Chip
+                {/* <Chip
                   label={statusLabel(row.status)}
                   color={statusColor(row.status)}
                   size="small"
+                /> */}
+                <Chip
+                  label={statusLabel(row.status)}
+                  size="small"
+                  sx={{
+                    ...statusColor(row.status),
+                    fontWeight: 500,
+                    textTransform: 'capitalize'
+                  }}
                 />
+
+
               </Grid>
 
               {/* ACTIONS */}

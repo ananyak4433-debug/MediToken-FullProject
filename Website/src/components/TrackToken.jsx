@@ -28,7 +28,54 @@ export default function TrackToken() {
 
   const appt = result?.appointment
   const ahead = result?.patientsAhead ?? 0
-  const waitMin = ahead * 15
+  // const waitMin = ahead * 15
+
+  // const calcWaitMin = (appt) => {
+  //   if (!appt?.appointmentTime) return 0
+
+  //   // parse "2:00 PM" → minutes since midnight
+  //   const [time, period] = appt.appointmentTime.split(' ')
+  //   let [h, m] = time.split(':').map(Number)
+  //   if (period === 'PM' && h !== 12) h += 12
+  //   if (period === 'AM' && h === 12) h = 0
+  //   const apptMin = h * 60 + m
+
+  //   const now = new Date()
+  //   const nowMin = now.getHours() * 60 + now.getMinutes()
+
+  //   const diff = apptMin - nowMin
+  //   return diff > 0 ? diff : 0
+  // }
+
+  const calcWaitMin = (appt) => {
+  if (!appt?.appointmentDate || !appt?.appointmentTime) return 0;
+
+  // Parse appointment time
+  const [time, period] = appt.appointmentTime.split(' ');
+  let [hours, minutes] = time.split(':').map(Number);
+
+  if (period === 'PM' && hours !== 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+
+  // Create full appointment datetime
+  const appointmentDate = new Date(appt.appointmentDate);
+
+  appointmentDate.setHours(hours);
+  appointmentDate.setMinutes(minutes);
+  appointmentDate.setSeconds(0);
+  appointmentDate.setMilliseconds(0);
+
+  // Current datetime
+  const now = new Date();
+
+  // Difference in minutes
+  const diffMs = appointmentDate - now;
+  const diffMin = Math.floor(diffMs / (1000 * 60));
+
+  return diffMin > 0 ? diffMin : 0;
+};
+
+  const waitMin = calcWaitMin(appt)
 
   return (
     <section className={styles.section}>
@@ -64,15 +111,14 @@ export default function TrackToken() {
                 <p className={styles.resultLabel}>Token</p>
                 <p className={styles.resultToken}>#{appt.tokenNumber}</p>
               </div>
-              <div className={`${styles.statusBadge} ${
-                appt.status === 'completed' ? styles.statusDone
-                : ahead === 0 ? styles.statusNow : ''
-              }`}>
+              <div className={`${styles.statusBadge} ${appt.status === 'completed' ? styles.statusDone
+                  : ahead === 0 ? styles.statusNow : ''
+                }`}>
                 {appt.status === 'completed' ? '✅ Completed'
                   : appt.status === 'cancelled' ? '❌ Cancelled'
-                  : appt.status === 'serving' ? '🔔 Your Turn!'
-                  : ahead === 0 ? '🔔 Your Turn!'
-                  : '⏳ In Queue'}
+                    : appt.status === 'serving' ? '🔔 Your Turn!'
+                      : ahead === 0 ? '🔔 Your Turn!'
+                        : '⏳ In Queue'}
               </div>
             </div>
 
@@ -96,7 +142,14 @@ export default function TrackToken() {
               </div>
               <div className={styles.metaItem}>
                 <span>Est. Wait</span>
-                <strong>{waitMin === 0 ? 'Soon!' : `~${waitMin} min`}</strong>
+                {/* <strong>{waitMin === 0 ? 'Soon!' : `~${waitMin} min`}</strong> */}
+                <strong>
+                  {waitMin === 0
+                    ? 'Soon!'
+                    : waitMin < 60
+                      ? `~${waitMin} min`
+                      : `~${Math.floor(waitMin / 60)}h ${waitMin % 60}m`}
+                </strong>
               </div>
             </div>
 
@@ -145,3 +198,5 @@ export default function TrackToken() {
     </section>
   )
 }
+
+

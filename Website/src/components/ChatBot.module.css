@@ -1,0 +1,282 @@
+.chatLauncher {
+  position: fixed;
+  bottom: 90px;
+  right: 28px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  /* background: #734f96; */
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 999999;
+}
+
+.chatLauncher:hover {
+  transform: scale(1.08);
+}
+
+.chatbot {
+  position: fixed;
+  right: 25px;
+  bottom: 130px;
+  width: 370px;
+  height: 600px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+  z-index: 999999;
+}
+
+.chatHeader {
+  background: #1b67b3;;
+  color: white;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatHeader h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.onlineStatus {
+  font-size: 13px;
+  color: #9df59d;
+}
+
+.chatHeader button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.chatWindow {
+  flex: 1;
+  overflow-y: auto;
+  background: #f6f6f8;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcomeMessage {
+  text-align: center;
+  margin: auto;
+}
+
+.chatInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: white;
+  border-top: 1px solid #ececec;
+}
+
+.chatInput input {
+  flex: 1;
+  border: 1px solid #d9d9d9;
+  border-radius: 30px;
+  padding: 12px 18px;
+  outline: none;
+  font-size: 14px;
+}
+
+.chatInput input:focus {
+  border-color: #1b67b3;
+}
+
+.chatInput button {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: #1b67b3;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.message {
+  max-width: 75%;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.user {
+  align-self: flex-end;
+  background: #1b67b3;
+  color: white;
+}
+
+.bot {
+  align-self: flex-start;
+  background: white;
+  color: #333;
+  border: 1px solid #e2e2e2;
+}
+
+.typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 0;
+}
+
+.typing span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1b67b3;
+  animation: bounce 1.4s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.4);
+    opacity: 0.5;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.quickActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.quickActions button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #1b67b3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.quickActions button:hover {
+  background: #124272;
+}
+
+.headerLeft{
+    display:flex;
+    flex-direction:column;
+}
+
+.headerButtons{
+    display:flex;
+    gap:10px;
+}
+
+.headerButtons button{
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.headerButtons button:hover{
+    transform:scale(1.1);
+}
+
+.appointmentCard {
+  background: white;
+  border-radius: 14px;
+  padding: 15px;
+  margin-top: 10px;
+  border-left: 5px solid #734F96;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.appointmentCard h4 {
+  margin: 0 0 12px;
+  color: #734F96;
+}
+
+.appointmentCard p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+
+
+.appointment-selection{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.appointment-card{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:12px;
+    background:#fff;
+}
+
+.appointment-card button{
+    width:100%;
+    margin-top:10px;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#734f96;
+    color:white;
+    cursor:pointer;
+}
+
+.appointmentSelectionCard {
+    margin-bottom: 20px;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.trackAppointmentBtn {
+    margin-top: 12px;
+    margin-bottom: 18px;
+    padding: 8px 14px;
+    background: #2f80ed;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.trackAppointmentBtn:hover {
+    background: #1d6fd8;
+}

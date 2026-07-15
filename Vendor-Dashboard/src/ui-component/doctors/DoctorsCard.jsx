@@ -12,7 +12,7 @@ const DoctorsCard = () => {
   const dispatch = useDispatch();
   const { doctorsList = [], loading } = useSelector((state) => state.doctors || {});
   console.log('🔍 Redux state:', { doctorsList, loading });
-console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
+  console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
 
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
@@ -45,19 +45,27 @@ console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
   };
 
   /* ================= STATUS COLOR ================= */
+  // const getStatusColor = (status) => {
+  //   if (status === 'active') return 'success';
+  //   if (status === 'inactive') return 'warning';
+  //   if (status === 'blocked') return 'error';
+  //   return 'default';
+  // };
+
+
   const getStatusColor = (status) => {
-    if (status === 'active') return 'success';
-    if (status === 'inactive') return 'warning';
-    if (status === 'blocked') return 'error';
-    return 'default';
+    if (status === 'active') return { backgroundColor: '#E8F5EE', color: '#1D9E75' };
+    if (status === 'inactive') return { backgroundColor: '#FFF4DE', color: '#EF9F27' };
+    if (status === 'blocked') return { backgroundColor: '#fdecea', color: '#ef4444' };
+    return { backgroundColor: '#f0f0f0', color: '#888' };
   };
 
   const filteredDoctors = doctorsList
-  .slice()
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
-  .filter((doc) =>
-    doc.name?.toLowerCase().includes(search.toLowerCase())
-  );
+    .slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .filter((doc) =>
+      doc.name?.toLowerCase().includes(search.toLowerCase())
+    );
 
   return (
     <>
@@ -77,8 +85,10 @@ console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
                 </Box>
                 <Button
                   variant="contained" startIcon={<PlusOutlined />} onClick={handleOpen}
-                  sx={{ borderRadius: 5, textTransform: 'none',
-                    backgroundColor: '#38c1b3', '&:hover': { backgroundColor: '#32a087' } }}
+                  sx={{
+                    borderRadius: 5, textTransform: 'none',
+                    backgroundColor: '#38c1b3', '&:hover': { backgroundColor: '#32a087' }
+                  }}
                 >
                   Add Doctor
                 </Button>
@@ -106,7 +116,7 @@ console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
 
               {/* ROWS */}
               {!loading && filteredDoctors.map((doc) =>
-               (
+              (
                 <Grid
                   container key={doc._id} alignItems="center"
                   sx={{ py: 2, borderTop: '1px solid #eee', '&:hover': { backgroundColor: '#fafafa' } }}
@@ -134,7 +144,16 @@ console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
 
                   {/* Status */}
                   <Grid item xs={1}>
-                    <Chip label={doc.status} color={getStatusColor(doc.status)} size="small" />
+                    {/* <Chip label={doc.status} color={getStatusColor(doc.status)} size="small" /> */}
+                    <Chip
+                      label={doc.status}
+                      size="small"
+                      sx={{
+                        ...getStatusColor(doc.status),
+                        fontWeight: 500,
+                        textTransform: 'capitalize'
+                      }}
+                    />
                   </Grid>
 
                   {/* ✅ Actions */}
@@ -142,8 +161,10 @@ console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
                     <Tooltip title="Edit">
                       <IconButton
                         size="small" onClick={() => handleEdit(doc)}
-                        sx={{ color: '#38c1b3', border: '1px solid #38c1b3',
-                          '&:hover': { backgroundColor: '#e8f8f7' } }}
+                        sx={{
+                          color: '#38c1b3', border: '1px solid #38c1b3',
+                          '&:hover': { backgroundColor: '#e8f8f7' }
+                        }}
                       >
                         <EditOutlined />
                       </IconButton>
@@ -151,8 +172,10 @@ console.log('🔍 Full state.doctor:', useSelector((state) => state.doctor));
                     <Tooltip title="Delete">
                       <IconButton
                         size="small" onClick={() => handleDelete(doc._id)}
-                        sx={{ color: '#ff4d4f', border: '1px solid #ff4d4f',
-                          '&:hover': { backgroundColor: '#fff1f0' } }}
+                        sx={{
+                          color: '#ff4d4f', border: '1px solid #ff4d4f',
+                          '&:hover': { backgroundColor: '#fff1f0' }
+                        }}
                       >
                         <DeleteOutlined />
                       </IconButton>

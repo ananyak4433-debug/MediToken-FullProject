@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from './AuthModal'
@@ -5,7 +6,7 @@ import styles from './Navbar.module.css'
 import { jwtDecode } from 'jwt-decode';
 
 export default function Navbar({ onNav, activePage }) {
-  const { user, logout } = useAuth(); // ✅ FIXED
+  const { user, logout } = useAuth();
 
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -21,16 +22,14 @@ export default function Navbar({ onNav, activePage }) {
     { label: 'Home', page: 'home' },
     { label: 'How it works', page: 'how' },
     { label: 'Departments', page: 'departments' },
-    { label: 'Track Token', page: 'track' },
+    // { label: 'Track Token', page: 'track' },
   ]
 
-  // ✅ Proper logout handler
   const handleLogout = async () => {
     const res = await logout();
-
     if (res.success) {
       setMenuOpen(false);
-      onNav('home'); // optional redirect
+      onNav('home');
     } else {
       console.error(res.message);
     }
@@ -42,19 +41,7 @@ export default function Navbar({ onNav, activePage }) {
         <div className={styles.inner}>
 
           {/* LOGO */}
-          {/* <div className={styles.logo} onClick={() => onNav('home')}>
-            <div className={styles.logoIcon}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="8" r="4" fill="white"/>
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </div>
-            <span>
-              <span className={styles.logoMedi}>Medi</span>
-              <span className={styles.logoToken}>Token</span>
-            </span>
-          </div> */}
-          <img src='/logo3-bg.png' alt='logo' width={'250px'}></img>
+          <img src='/logo3-bg.png' alt='logo' width={'250px'} />
 
           {/* NAV LINKS */}
           <div className={`${styles.links} ${menuOpen ? styles.open : ''}`}>
@@ -67,6 +54,16 @@ export default function Navbar({ onNav, activePage }) {
                 {l.label}
               </button>
             ))}
+
+            {/* 👇 My Bookings — mobile, only when logged in */}
+            {/* {user && (
+              <button
+                className={`${styles.link} ${activePage === 'my-bookings' ? styles.active : ''}`}
+                onClick={() => { onNav('my-bookings'); setMenuOpen(false) }}
+              >
+                My Bookings
+              </button>
+            )} */}
           </div>
 
           {/* ACTIONS */}
@@ -79,7 +76,17 @@ export default function Navbar({ onNav, activePage }) {
               Track Status
             </button>
 
-            {/* ✅ USER LOGGED IN */}
+            {/* 👇 My Bookings — desktop, only when logged in */}
+            {user && (
+              <button
+                className={`${styles.trackBtn} ${activePage === 'my-bookings' ? styles.active : ''}`}
+                onClick={() => onNav('my-bookings')}
+              >
+                My Bookings
+              </button>
+            )}
+
+            {/* USER LOGGED IN */}
             {user ? (
               <div className={styles.patientMenu}>
                 <div className={styles.avatar}>
@@ -88,7 +95,6 @@ export default function Navbar({ onNav, activePage }) {
                 <span className={styles.patientName}>
                   {user.name?.split(' ')[0]}
                 </span>
-
                 <button
                   className={styles.logoutBtn}
                   onClick={handleLogout}
@@ -122,6 +128,7 @@ export default function Navbar({ onNav, activePage }) {
           >
             <span /><span /><span />
           </button>
+
         </div>
       </nav>
 

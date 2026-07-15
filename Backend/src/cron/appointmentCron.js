@@ -1,72 +1,141 @@
-const cron = require('node-cron');
-const Appointment = require('../models/appointmentModel');
+const cron = require("node-cron");
+const Appointment = require("../models/appointmentModel");
+const Doctor = require("../models/doctorCollection");
 
 const startAppointmentCron = () => {
-  cron.schedule('* * * * *', async () => {
+
+  cron.schedule("* * * * *", async () => {
+
     try {
+
       const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
 
-      // ✅ IST offset
-      const IST_OFFSET = 5.5 * 60 * 60 * 1000;
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
 
-      const start = new Date(now);
-      start.setHours(0, 0, 0, 0);
-      const startUTC = new Date(start.getTime() + IST_OFFSET);
+      const todayEnd = new Date();
+      todayEnd.setHours(23, 59, 59, 999);
 
-      const end = new Date(now);
-      end.setHours(23, 59, 59, 999);
-      const endUTC = new Date(end.getTime() - IST_OFFSET);
+      const doctors = await Doctor.find();
 
-      const parseTime = (timeStr) => {
-        if (!timeStr) return null;
-        const [time, period] = timeStr.split(' ');
-        let [h, m] = time.split(':').map(Number);
-        if (period === 'PM' && h !== 12) h += 12;
-        if (period === 'AM' && h === 12) h = 0;
-        return h * 60 + m;
-      };
+      for (const doctor of doctors) {
 
-      // ✅ auto-serve: booked appointments whose time has arrived
-      const bookedAppointments = await Appointment.find({
-        appointmentDate: { $gte: startUTC, $lte: endUTC },
-        status: 'booked'
-      });
+        const appointments = await Appointment.find({
+          doctorId: doctor._id,
+          appointmentDate: {
+            $gte: todayStart,
+            $lte: todayEnd
+          },
+          status: {
+            $in: ["booked", "serving", "completed"]
+          }
+        }).sort({ tokenNumber: 1 });
 
-      for (const appt of bookedAppointments) {
-        const apptMin = parseTime(appt.appointmentTime);
-        if (apptMin === null) continue;
+        if (!appointments.length) continue;
 
-        if (currentMin >= apptMin) {
-          appt.status = 'serving';
-          await appt.save();
-          console.log(`✅ Token #${appt.tokenNumber} → serving`);
-        }
-      }
+        let currentServingFound = false;
 
-      // ✅ auto-complete: serving appointments whose slot has passed
-      const servingAppointments = await Appointment.find({
-        appointmentDate: { $gte: startUTC, $lte: endUTC },
-        status: 'serving'
-      });
+        for (const appt of appointments) {
 
-      for (const appt of servingAppointments) {
-        const apptMin = parseTime(appt.appointmentTime);
-        if (apptMin === null) continue;
+          // const appointmentTime = new Date(appt.appointmentDate);
 
-        if (currentMin >= apptMin + 15) { // ✅ 15 min slot
-          appt.status = 'completed';
-          await appt.save();
-          console.log(`✅ Token #${appt.tokenNumber} → completed`);
+          // const [time, period] =
+          //   appt.appointmentTime.split(" ");
+
+          // let [hours, minutes] =
+          //   time.split(":").map(Number);
+
+          // if (period === "PM" && hours !== 12)
+          //   hours += 12;
+
+          // if (period === "AM" && hours === 12)
+          //   hours = 0;
+
+          // appointmentTime.setHours(
+          //   hours,
+          //   minutes,
+          //   0,
+          //   0
+          // );
+
+          const appointmentTime = new Date(appt.appointmentDateTime);
+
+          if (isNaN(appointmentTime.getTime())) {
+            console.log("❌ Invalid appointmentDateTime:", appt._id);
+            continue;
+          }
+
+          const endTime = new Date(
+            appointmentTime.getTime() + 15 * 60000
+          );
+
+          // Patient completed
+          if (now > endTime) {
+
+            if (appt.status !== "completed") {
+
+              appt.status = "completed";
+              console.log({
+                id: appt._id,
+                appointmentDate: appt.appointmentDate,
+                appointmentDateTime: appt.appointmentDateTime,
+                appointmentTime: appt.appointmentTime
+              });
+              await appt.save();
+
+              console.log(
+                `✅ Token ${appt.tokenNumber} -> completed`
+              );
+            }
+
+            continue;
+          }
+
+          // Current serving patient
+          if (
+            now >= appointmentTime &&
+            now <= endTime &&
+            !currentServingFound
+          ) {
+
+            currentServingFound = true;
+
+            if (appt.status !== "serving") {
+
+              appt.status = "serving";
+              await appt.save();
+
+              console.log(
+                `🩺 Token ${appt.tokenNumber} -> serving`
+              );
+            }
+
+            continue;
+          }
+
+          // Future appointments
+          if (
+            now < appointmentTime &&
+            appt.status !== "booked"
+          ) {
+
+            appt.status = "booked";
+            await appt.save();
+          }
         }
       }
 
     } catch (err) {
-      console.error('Cron error:', err.message);
+
+      console.error(
+        "Appointment Cron Error:",
+        err.message
+      );
     }
+
   });
 
-  console.log('✅ Appointment cron started');
+  console.log("✅ Appointment cron started");
 };
 
 module.exports = startAppointmentCron;

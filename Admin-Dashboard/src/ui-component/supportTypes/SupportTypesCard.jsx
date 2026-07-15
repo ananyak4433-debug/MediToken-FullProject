@@ -74,10 +74,17 @@ const SupportTypesCard = ({ onAdd }) => {
     setDeleteOpen(false);
   };
 
+  // const statusColor = (status) => {
+  //   if (status === 'active') return 'success';
+  //   if (status === 'inactive') return 'warning';
+  //   return 'default';
+  // };
+
+
   const statusColor = (status) => {
-    if (status === 'active') return 'success';
-    if (status === 'inactive') return 'warning';
-    return 'default';
+    if (status === 'active') return { backgroundColor: '#E8F5EE', color: '#1D9E75' };
+    if (status === 'inactive') return { backgroundColor: '#FFF4DE', color: '#EF9F27' };
+    return { backgroundColor: '#f0f0f0', color: '#888' };
   };
 
 
@@ -122,11 +129,23 @@ const SupportTypesCard = ({ onAdd }) => {
                   </TableCell>
                   <TableCell>{type.description}</TableCell>
                   <TableCell>
-                    <Chip
+                    {/* <Chip
                       label={type.status}
                       color={statusColor(type.status)}
                       size="small"
+                    /> */}
+
+
+                    <Chip
+                      label={type.status}
+                      size="small"
+                      sx={{
+                        ...statusColor(type.status),
+                        fontWeight: 500,
+                        textTransform: 'capitalize'
+                      }}
                     />
+
                   </TableCell>
                   <TableCell>
                     <IconButton

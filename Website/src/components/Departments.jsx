@@ -76,7 +76,8 @@ export default function Departments({ onBook }) {
         ) : (
           <div className={styles.grid}>
             {depts.map((d, i) => (
-              <button key={d._id || i} className={styles.card} onClick={onBook}>
+              // <button key={d._id || i} className={styles.card} onClick={onBook}>
+              <button key={d._id || i} className={styles.card} onClick={() => onBook(d)}>
                 <div className={styles.icon}>{getIcon(d.departmentName)}</div>
                 <span className={styles.name}>{d.departmentName}</span>
               </button>

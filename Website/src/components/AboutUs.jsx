@@ -48,7 +48,7 @@ const team = [
     icon: <Workflow size={28} />
   },
   {
-    name: "Sneha Pillai",
+    name: "Claudy Chatty",
     role: "Head of Product Design",
     icon: <PenTool size={28} />
   }

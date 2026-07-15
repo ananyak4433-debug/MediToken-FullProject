@@ -6,6 +6,13 @@ const replySchema = new mongoose.Schema({
   sentAt:  { type: Date, default: Date.now }
 });
 
+
+const capitalize = (val) =>
+  val && typeof val === 'string'
+    ? val.charAt(0).toUpperCase() + val.slice(1)
+    : val;
+
+
 const supportRequestSchema = new mongoose.Schema(
   {
     vendor: {
@@ -16,8 +23,8 @@ const supportRequestSchema = new mongoose.Schema(
     name:        { type: String, required: true, trim: true },
     email:       { type: String, required: true, trim: true },
     supportType: { type: String, required: true, trim: true },
-    subject:     { type: String, required: true, trim: true },
-    message:     { type: String, required: true, trim: true },
+    subject:     { type: String, required: true, trim: true ,set: capitalize},
+    message:     { type: String, required: true, trim: true ,set: capitalize},
     status: {
       type: String,
       enum: ["Open", "Pending", "Closed"],

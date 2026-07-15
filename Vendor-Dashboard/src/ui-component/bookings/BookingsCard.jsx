@@ -31,21 +31,21 @@ export default function BookingsCard() {
 
   const [selectedDept, setSelectedDept] = useState('');
 
-const SPECIALIZATIONS = [
-  'General OPD', 'Cardiology', 'Dermatology', 'Neurology',
-  'Orthopaedics', 'Pediatricis', 'Pharmacy', 'Gynecology',
-  'Ophthalmology', 'ENT', 'Dental', 'Radiology'
-];
+  const SPECIALIZATIONS = [
+    'General OPD', 'Cardiology', 'Dermatology', 'Neurology',
+    'Orthopaedics', 'Pediatricis', 'Pharmacy', 'Gynecology',
+    'Ophthalmology', 'ENT', 'Dental', 'Radiology'
+  ];
 
-const deptDoctors = doctorsList.filter(
-  d => d.specialization === selectedDept && d.status === 'active'
-);
+  const deptDoctors = doctorsList.filter(
+    d => d.specialization === selectedDept && d.status === 'active'
+  );
 
-const handleDeptChange = (dept) => {
-  setSelectedDept(dept);
-  setFormData(f => ({ ...f, doctorId: '', appointmentDay: '', appointmentTime: '' }));
-  setAvailableSlots([]);
-};
+  const handleDeptChange = (dept) => {
+    setSelectedDept(dept);
+    setFormData(f => ({ ...f, doctorId: '', appointmentDay: '', appointmentTime: '' }));
+    setAvailableSlots([]);
+  };
 
 
   useEffect(() => {
@@ -137,40 +137,50 @@ const handleDeptChange = (dept) => {
 
   // ================= FILTER =================
   const filteredRows = bookingsList
-  .slice()
-  .sort((a, b) => b.tokenNumber - a.tokenNumber) // ✅ latest token first
-  .filter(row =>
-    `${row.patientName} ${row.doctorId?.name} ${row._id}`
-      .toLowerCase().includes(search.toLowerCase())
-  )
-  .filter(row => {
-    if (filter === "All")       return true;
-    if (filter === "Pending")   return row.status === "booked";
-    if (filter === "Confirmed") return row.status === "serving";
-    if (filter === "Cancelled") return row.status === "cancelled";
-    if (filter === "Completed") return row.status === "completed";
-    return true;
-  });
+    .slice()
+    .sort((a, b) => b.tokenNumber - a.tokenNumber) // ✅ latest token first
+    .filter(row =>
+      `${row.patientName} ${row.doctorId?.name} ${row._id}`
+        .toLowerCase().includes(search.toLowerCase())
+    )
+    .filter(row => {
+      if (filter === "All") return true;
+      if (filter === "Pending") return row.status === "booked";
+      if (filter === "Confirmed") return row.status === "serving";
+      if (filter === "Cancelled") return row.status === "cancelled";
+      if (filter === "Completed") return row.status === "completed";
+      return true;
+    });
 
   // ================= STATS =================
   const stats = {
-    total:     bookingsList.length,
-    pending:   bookingsList.filter(r => r.status === "booked").length,
+    total: bookingsList.length,
+    pending: bookingsList.filter(r => r.status === "booked").length,
     confirmed: bookingsList.filter(r => r.status === "serving").length,
     cancelled: bookingsList.filter(r => r.status === "cancelled").length
   };
 
+  // const statusColor = (status) => {
+  //   if (status === "booked")    return "warning";
+  //   if (status === "serving")   return "success";
+  //   if (status === "cancelled") return "error";
+  //   if (status === "completed") return "primary";
+  //   return "default";
+  // };
+
+
   const statusColor = (status) => {
-    if (status === "booked")    return "warning";
-    if (status === "serving")   return "success";
-    if (status === "cancelled") return "error";
-    if (status === "completed") return "primary";
-    return "default";
+    if (status === "booked") return { backgroundColor: '#FFF4DE', color: '#EF9F27' };
+    if (status === "serving") return { backgroundColor: '#EAF4FF', color: '#2196F3' };
+    if (status === "completed") return { backgroundColor: '#E8F5EE', color: '#1D9E75' };
+    if (status === "cancelled") return { backgroundColor: '#fdecea', color: '#ef4444' };
+    return { backgroundColor: '#f0f0f0', color: '#888' };
   };
 
+
   const statusLabel = (status) => {
-    if (status === "booked")    return "Pending";
-    if (status === "serving")   return "Confirmed";
+    if (status === "booked") return "Pending";
+    if (status === "serving") return "Confirmed";
     if (status === "cancelled") return "Cancelled";
     if (status === "completed") return "Completed";
     return status;
@@ -181,10 +191,10 @@ const handleDeptChange = (dept) => {
       {/* STATS */}
       <Grid container spacing={2} mb={3}>
         {[
-          { label: "Total Bookings", value: stats.total,     color: "text.primary" },
-          { label: "Pending",        value: stats.pending,   color: "warning.main" },
-          { label: "Confirmed",      value: stats.confirmed, color: "success.main" },
-          { label: "Cancelled",      value: stats.cancelled, color: "error.main" }
+          { label: "Total Bookings", value: stats.total, color: "text.primary" },
+          { label: "Pending", value: stats.pending, color: "warning.main" },
+          { label: "Confirmed", value: stats.confirmed, color: "success.main" },
+          { label: "Cancelled", value: stats.cancelled, color: "error.main" }
         ].map(s => (
           <Grid item xs={3} key={s.label}>
             <Card sx={{ p: 2 }}>
@@ -295,11 +305,23 @@ const handleDeptChange = (dept) => {
               </Grid>
 
               <Grid item xs={1}>
-                <Chip
+                {/* <Chip
                   label={statusLabel(row.status)}
                   color={statusColor(row.status)}
                   size="small"
+                /> */}
+
+                <Chip
+                  label={statusLabel(row.status)}
+                  size="small"
+                  sx={{
+                    ...statusColor(row.status),
+                    fontWeight: 500,
+                    textTransform: 'capitalize'
+                  }}
                 />
+
+
               </Grid>
 
               <Grid item xs={2} display="flex" gap={1}>

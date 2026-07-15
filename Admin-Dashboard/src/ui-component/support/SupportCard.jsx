@@ -177,3 +177,7 @@ const SupportCard = ({ onSelectTicket }) => {
 };
 
 export default SupportCard;
+
+
+
+

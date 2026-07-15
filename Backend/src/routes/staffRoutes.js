@@ -23,7 +23,7 @@ router.post("/staff/login", staffLogin);
 router.post("/staff/logout", staffLogout);
 
 
-router.get("/staff/profile", vendorProtect, getStaffProfile);
+router.get("/staff/profile", staffProtect, getStaffProfile);
 
 
 router.get("/staff/all", vendorProtect, getAllStaff);
